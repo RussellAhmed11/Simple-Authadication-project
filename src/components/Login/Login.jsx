@@ -1,14 +1,15 @@
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import auth from '../../Firebase/Firebase.init';
 import { useState } from 'react';
 
 const Login = ()=>{
     const [user,setUser]=useState();
-    const provider = new GoogleAuthProvider();
+    const GoogleProvider = new GoogleAuthProvider();
+    const GithubProvider=new GithubAuthProvider();
     const handleGoogleSignIn=()=>{
-      signInWithPopup(auth,provider)
+      signInWithPopup(auth,GoogleProvider)
       .then((result)=>{
-        console.log('signout sucsess')
+        console.log('signoIn sucsess')
        setUser(result.user) 
       })
       .catch((error)=>{
@@ -25,18 +26,28 @@ const Login = ()=>{
             console.log(error)
         });
     }
+    const handleGithubSignIn=()=>{
+          signInWithPopup(auth,GithubProvider)
+          .then((result)=>{
+            setUser(result.user)})
+          .catch(error=>console.log(error));
+    
+      }
     return (
         <div>
            {
             user ?  <button onClick={handleGoogleSignOut} style={{"marginRight":'20px'}}>Sign Out</button>
             :
+            <>
             <button onClick={handleGoogleSignIn} style={{"marginRight":'20px'}}>Log in with google</button>
+            <button onClick={handleGithubSignIn} style={{"marginRight":'20px'}}>Log in with Github</button>
+            </>
+            
            }
            {user && <div>
             <h1>{user.displayName}</h1>
             <h2>{user.email}</h2>
-            <img src={user.photoURL
-} alt="" />
+            <img src={user.photoURL} alt="" />
             </div>}
         </div>
     );
